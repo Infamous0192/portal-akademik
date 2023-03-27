@@ -14,18 +14,11 @@
     </div>
 
     <div class="card-body">
-        <form method="POST" action="{{ route('admin.login.perform') }}">
+        <form method="POST" action="{{ route('authenticate') }}">
             @csrf
-            <x-text-input
-                name="username"
-                label="Username"
-            />
+            <x-text-input name="username" label="Username" />
 
-            <x-text-input
-                name="password"
-                label="Password"
-                type="password"
-            />
+            <x-text-input name="password" label="Password" type="password" />
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-lg btn-block">

@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class LoginRequest extends FormRequest
+class RuanganRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +25,15 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'required|exists:App\Models\User,username',
-            'password' => 'required|min:6'
+            'nama' => 'required',
+            'kode' => [
+                'required',
+                Rule::unique(\App\Models\Ruangan::class, 'kode')->ignore($this->route('ruangan'), 'id')
+            ],
+            'id_gedung' => [
+                'required',
+                Rule::exists(\App\Models\Gedung::class, 'id')
+            ]
         ];
     }
 }

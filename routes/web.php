@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers;
+use App\Http\Controllers\Admin;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,16 +15,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::redirect('/', '/dashboard-general-dashboard');
+Route::redirect('/', 'login');
 
-Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->group(function () {
-    /**
-     * Login Routes
-     */
-    Route::get('/login', 'LoginController@show')->name('admin.login');
-    Route::post('/login', 'LoginController@login')->name('admin.login.perform');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
 
-    Route::any('/logout', 'LogoutController@index')->name('admin.logout');
+    Route::resource('fakultas', Admin\FakultasController::class)->parameter('fakultas', 'fakultas');
+    Route::resource('prodi', Admin\ProdiController::class);
+    Route::resource('gedung', Admin\GedungController::class);
+    Route::resource('ruangan', Admin\RuanganController::class);
+    Route::resource('mahasiswa', Admin\MahasiswaController::class);
+    Route::resource('dosen', Admin\DosenController::class);
+    Route::resource('matakuliah', Admin\MatakuliahController::class);
+});
+
+Route::controller(Controllers\AuthController::class)->group(function () {
+    Route::get('/login', 'login')->name('login');
+    Route::post('/login', 'authenticate')->name('authenticate');
+    Route::any('/logout', 'logout')->name('logout');
 });
 
 // Dashboard
