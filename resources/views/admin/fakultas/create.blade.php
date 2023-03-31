@@ -17,8 +17,8 @@
     <div class="section-body">
       <div class="row">
         <div class="col-12">
-          @csrf
           <form class="card mb-4" method="POST" action="{{ route('admin.fakultas.store') }}">
+            @csrf
             <div class="card-header">
               <h4>Tambah Fakultas</h4>
             </div>

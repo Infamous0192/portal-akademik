@@ -34,7 +34,7 @@
     <div class="section-body">
       <div class="row">
         <div class="col-12">
-          <form class="card mb-4" action="{{ route('admin.fakultas.update', 1) }}" method="POST"
+          <form class="card mb-4" action="{{ route('admin.fakultas.update', $fakultas->id) }}" method="POST"
             enctype="multipart/form-data">
             @method('PUT')
             @csrf
@@ -63,7 +63,7 @@
           <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
               <h4>Daftar Program Studi</h4>
-              <a href="{{ route('admin.prodi.create') }}">
+              <a href="{{ route('admin.prodi.create', ['fakultas' => $fakultas->id]) }}">
                 <button class="btn btn-primary rounded-sm">Tambah</button>
               </a>
             </div>

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RuanganRequest;
+use App\Models\Gedung;
+use App\Models\Ruangan;
 use Illuminate\Http\Request;
 
 class RuanganController extends Controller
@@ -14,7 +17,9 @@ class RuanganController extends Controller
      */
     public function index()
     {
-        //
+        $ruangan = Ruangan::all();
+
+        return view('admin.ruangan.index', compact('ruangan'));
     }
 
     /**
@@ -24,7 +29,11 @@ class RuanganController extends Controller
      */
     public function create()
     {
-        //
+        $gedung = Gedung::all()->map(function ($item, $key) {
+            return ['label' => $item->nama, 'value' => $item->id];
+        });
+
+        return view('admin.ruangan.create', compact('gedung'));
     }
 
     /**
@@ -33,9 +42,11 @@ class RuanganController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RuanganRequest $request)
     {
-        //
+        Ruangan::create($request->validated());
+
+        return redirect()->route('admin.ruangan.index')->with('success', 'Ruangan berhasil ditambahkan');
     }
 
     /**
@@ -44,9 +55,13 @@ class RuanganController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Ruangan $ruangan)
     {
-        //
+        $gedung = Gedung::all()->map(function ($item, $key) {
+            return ['label' => $item->nama, 'value' => $item->id];
+        });
+
+        return view('admin.ruangan.show', compact('ruangan', 'gedung'));
     }
 
     /**
@@ -55,9 +70,13 @@ class RuanganController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Ruangan $ruangan)
     {
-        //
+        $gedung = Gedung::all()->map(function ($item, $key) {
+            return ['label' => $item->nama, 'value' => $item->id];
+        });
+
+        return view('admin.ruangan.show', compact('ruangan', 'gedung'));
     }
 
     /**
@@ -67,9 +86,12 @@ class RuanganController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RuanganRequest $request, $id)
     {
-        //
+        $ruangan = Ruangan::findOrFail($id);
+        $ruangan->update($request->validated());
+
+        return redirect()->route('admin.ruangan.show', $id)->with('success', 'Ruangan berhasil diubah');
     }
 
     /**
@@ -78,8 +100,10 @@ class RuanganController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Ruangan $ruangan)
     {
-        //
+        $ruangan->delete();
+
+        return redirect()->route('admin.ruangan.index')->with('success', 'Ruangan berhasil dihapus');
     }
 }

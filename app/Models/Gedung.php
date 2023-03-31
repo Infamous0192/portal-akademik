@@ -29,6 +29,6 @@ class Gedung extends Model
 
     public function ruangan()
     {
-        return $this->hasMany(Ruangan::class);
+        return $this->hasMany(Ruangan::class, 'id_gedung', 'id');
     }
 }

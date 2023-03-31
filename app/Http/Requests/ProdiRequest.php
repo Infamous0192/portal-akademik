@@ -28,7 +28,7 @@ class ProdiRequest extends FormRequest
             'nama' => 'required',
             'kode' => [
                 'required',
-                Rule::unique(\App\Models\Prodi::class, 'kode')->ignore($this->route('prodi'), 'id')
+                Rule::unique(\App\Models\Prodi::class)->ignore($this->route('prodi'))
             ],
             'jenjang' => [
                 'required',

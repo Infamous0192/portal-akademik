@@ -37,4 +37,19 @@ class Matakuliah extends Model
      * @var array
      */
     protected $hidden = [];
+
+    public function prodi()
+    {
+        return $this->belongsTo('prodi', 'id_prodi');
+    }
+
+    public function ruangan()
+    {
+        return $this->belongsTo('ruangan', 'id_ruangan');
+    }
+
+    public function dosen()
+    {
+        return $this->belongsToMany(Dosen::class, 'matakuliah_dosen', 'id_matakuliah', 'id_dosen');
+    }
 }

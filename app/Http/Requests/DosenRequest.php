@@ -38,16 +38,12 @@ class DosenRequest extends FormRequest
             'agama' => 'required',
             'no_telepon' => 'required',
             'foto' => [
-                'required',
+                Rule::requiredIf($this->method() == 'POST'),
                 File::image(),
             ],
             'id_prodi' => [
                 'required',
                 Rule::exists(\App\Models\Prodi::class, 'id')
-            ],
-            'id_fakultas' => [
-                'required',
-                Rule::exists(\App\Models\Fakultas::class, 'id')
             ],
         ];
     }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GedungRequest;
+use App\Models\Gedung;
 use Illuminate\Http\Request;
 
 class GedungController extends Controller
@@ -14,7 +16,9 @@ class GedungController extends Controller
      */
     public function index()
     {
-        //
+        $gedung = Gedung::all();
+
+        return view('admin.gedung.index', compact('gedung'));
     }
 
     /**
@@ -24,7 +28,7 @@ class GedungController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.gedung.create');
     }
 
     /**
@@ -33,9 +37,11 @@ class GedungController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GedungRequest $request)
     {
-        //
+        Gedung::create($request->validated());
+
+        return redirect()->route('admin.gedung.index')->with('success', 'Gedung berhasil ditambahkan');
     }
 
     /**
@@ -44,9 +50,9 @@ class GedungController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Gedung $gedung)
     {
-        //
+        return view('admin.gedung.show', compact('gedung'));
     }
 
     /**
@@ -55,9 +61,9 @@ class GedungController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Gedung $gedung)
     {
-        //
+        return view('admin.gedung.show', compact('gedung'));
     }
 
     /**
@@ -67,9 +73,12 @@ class GedungController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(GedungRequest $request, $id)
     {
-        //
+        $gedung = Gedung::findOrFail($id);
+        $gedung->update($request->validated());
+
+        return redirect()->route('admin.gedung.show', $id)->with('success', 'Gedung berhasil diubah');
     }
 
     /**
@@ -78,8 +87,10 @@ class GedungController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Gedung $gedung)
     {
-        //
+        $gedung->delete();
+
+        return redirect()->route('admin.gedung.index')->with('success', 'Gedung berhasil dihapus');
     }
 }

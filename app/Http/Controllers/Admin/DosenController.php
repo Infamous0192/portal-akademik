@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DosenRequest;
+use App\Models\Prodi;
+use App\Models\Dosen;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class DosenController extends Controller
@@ -14,7 +19,9 @@ class DosenController extends Controller
      */
     public function index()
     {
-        //
+        $dosen = Dosen::all();
+
+        return view('admin.dosen.index', compact('dosen'));
     }
 
     /**
@@ -24,7 +31,11 @@ class DosenController extends Controller
      */
     public function create()
     {
-        //
+        $prodi = Prodi::all()->map(function ($item, $key) {
+            return ['label' => $item->nama, 'value' => $item->id];
+        });
+
+        return view('admin.dosen.create', compact('prodi'));
     }
 
     /**
@@ -33,9 +44,29 @@ class DosenController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DosenRequest $request)
     {
-        //
+        $filename = Str::uuid() . $request->file('foto')->extension();
+        $path = "/uploads/$filename";
+        $request->file('foto')->move(public_path('uploads'), $filename);
+
+        $user = User::create([
+            'nama' => $request->get('nama'),
+            'username' => $request->get('nip'),
+            'password' => $request->get('nip'),
+            'role' => 'dosen',
+        ]);
+
+        $prodi = Prodi::find($request->get('id_prodi'));
+
+        Dosen::create([
+            ...$request->except('foto'),
+            'foto' => $path,
+            'id_fakultas' => $prodi->id_fakultas,
+            'id_user' => $user->id,
+        ]);
+
+        return redirect()->route('admin.dosen.index')->with('success', 'Dosen berhasil ditambahkan');
     }
 
     /**
@@ -44,9 +75,9 @@ class DosenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Dosen $dosen)
     {
-        //
+        return view('admin.dosen.show', compact('dosen'));
     }
 
     /**
@@ -55,31 +86,55 @@ class DosenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Dosen $dosen)
     {
-        //
+        $prodi = Prodi::all()->map(function ($item, $key) {
+            return ['label' => $item->nama, 'value' => $item->id];
+        });
+
+        return view('admin.dosen.edit', compact('dosen', 'prodi'));
     }
 
     /**
      * Update the specified resource in storage.
-     *
+     * 
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(DosenRequest $request, $id)
     {
-        //
+        $data = $request->except(['foto']);
+
+        if ($request->file('foto') != null) {
+            $filename = Str::uuid() . $request->file('foto')->extension();
+            $request->file('foto')->move(public_path('uploads'), $filename);
+            $path = "/uploads/$filename";
+            $data['foto'] = $path;
+        }
+
+        $prodi = Prodi::find($request->get('id_prodi'));
+        $data['id_fakultas'] = $prodi->id_fakultas;
+
+        $dosen = Dosen::findOrFail($id);
+        
+        $dosen->update([
+            ...$data,
+        ]);
+
+        return redirect()->route('admin.dosen.show', $id)->with('success', 'Dosen berhasil diubah');
     }
 
     /**
      * Remove the specified resource from storage.
-     *
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Dosen $dosen)
     {
-        //
+        $dosen->delete();
+
+        return redirect()->route('admin.dosen.index')->with('success', 'Dosen berhasil dihapus');
     }
 }

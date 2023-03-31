@@ -26,7 +26,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('ruangan', Admin\RuanganController::class);
     Route::resource('mahasiswa', Admin\MahasiswaController::class);
     Route::resource('dosen', Admin\DosenController::class);
+    
     Route::resource('matakuliah', Admin\MatakuliahController::class);
+    Route::controller(Admin\MatakuliahController::class)->prefix('matakuliah')->name('matakuliah.')->group(function () {
+        Route::put('{matakuliah}/dosen', 'addDosen')->name('addDosen');
+        Route::delete('{matakuliah}/dosen', 'removeDosen')->name('removeDosen');
+    });
 });
 
 Route::controller(Controllers\AuthController::class)->group(function () {
