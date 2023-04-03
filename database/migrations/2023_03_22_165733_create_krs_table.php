@@ -26,11 +26,6 @@ return new class extends Migration
                 ->on('mahasiswa')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreign('id_matakuliah')
-                ->references('id')
-                ->on('matakuliah')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
             $table->foreign('id_tahun_akademik')
                 ->references('id')
                 ->on('tahun_akademik')

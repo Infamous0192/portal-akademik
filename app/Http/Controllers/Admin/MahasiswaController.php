@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MahasiswaRequest;
+use App\Models\Krs;
 use App\Models\Prodi;
 use App\Models\Mahasiswa;
+use App\Models\Nilai;
+use App\Models\TahunAkademik;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -46,7 +49,7 @@ class MahasiswaController extends Controller
      */
     public function store(MahasiswaRequest $request)
     {
-        $filename = Str::uuid() . $request->file('foto')->extension();
+        $filename = Str::uuid() . '.' . $request->file('foto')->extension();
         $path = "/uploads/$filename";
         $request->file('foto')->move(public_path('uploads'), $filename);
 
@@ -77,7 +80,21 @@ class MahasiswaController extends Controller
      */
     public function show(Mahasiswa $mahasiswa)
     {
-        return view('admin.mahasiswa.show', compact('mahasiswa'));
+        $nilai = Nilai::selectRaw('`id_matakuliah`, `nama`, `kode`, `semester`, `kategori`, `sks`, MAX(`nilai_absen`) AS `nilai_absen`, MAX(`nilai_tugas`) AS `nilai_tugas`, MAX(`nilai_uts`) AS `nilai_uts`, MAX(`nilai_uas`) AS `nilai_uas`')
+            ->join('matakuliah', 'nilai.id_matakuliah', '=', 'matakuliah.id')
+            ->whereIn(
+                'id_krs',
+                Krs::select('id')
+                    ->whereIn(
+                        'id_tahun_akademik',
+                        TahunAkademik::select('id')
+                            ->where('status', 1)
+                    )
+            )->where('id_mahasiswa', $mahasiswa->id)
+            ->groupBy('id_matakuliah')
+            ->get();
+
+        return view('admin.mahasiswa.show', compact('mahasiswa', 'nilai'));
     }
 
     /**
@@ -107,7 +124,7 @@ class MahasiswaController extends Controller
         $data = $request->except(['foto']);
 
         if ($request->file('foto') != null) {
-            $filename = Str::uuid() . $request->file('foto')->extension();
+            $filename = Str::uuid() . '.' . $request->file('foto')->extension();
             $request->file('foto')->move(public_path('uploads'), $filename);
             $path = "/uploads/$filename";
             $data['foto'] = $path;

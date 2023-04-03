@@ -21,11 +21,17 @@ return new class extends Migration
             $table->integer('nilai_uas');
             $table->timestamps();
             $table->integer('id_mahasiswa')->unsigned();
+            $table->integer('id_matakuliah')->unsigned();
             $table->integer('id_krs')->unsigned();
 
             $table->foreign('id_mahasiswa')
                 ->references('id')
                 ->on('mahasiswa')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreign('id_matakuliah')
+                ->references('id')
+                ->on('matakuliah')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->foreign('id_krs')

@@ -39,6 +39,14 @@
                 <a class="nav-link" href="{{ route('admin.matakuliah.index') }}"><i class="fas fa-th-large"></i>
                     <span>Matakuliah</span></a>
             </li>
+            <li class="{{ Request::is('admin/tahun_akademik*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.tahun_akademik.index') }}"><i class="fas fa-th-large"></i>
+                    <span>Tahun Akademik</span></a>
+            </li>
+            <li class="{{ Request::is('admin/krs*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.krs.index') }}"><i class="fas fa-th-large"></i>
+                    <span>Pengajuan KRS</span></a>
+            </li>
             {{-- <li class="{{ Route::is('admin.dashboard') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.dashboard') }}"><i class="fas fa-th-large"></i>
                     <span>Dashboard</span></a>

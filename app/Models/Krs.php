@@ -26,4 +26,18 @@ class Krs extends Model
      * @var array
      */
     protected $hidden = [];
+
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class, 'id_krs');
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa');
+    }
+
+    public function akademik() {
+        return $this->belongsTo(TahunAkademik::class, 'id_tahun_akademik');
+    }
 }

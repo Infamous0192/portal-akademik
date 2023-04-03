@@ -125,13 +125,12 @@
                 data-target="#deleteModal">Hapus</button>
             </div>
           </form>
-        </div>
 
-        <div class="col-12">
-          <div class="card">
+          <div class="card mb-4">
             <div class="card-header d-flex align-items-center justify-content-between">
               <h4>Daftar Dosen</h4>
-              <button class="btn btn-primary rounded-sm" data-toggle="modal" data-target="#addDosenModal">Tambah</button>
+              <button class="btn btn-primary rounded-sm" data-toggle="modal"
+                data-target="#addDosenModal">Tambah</button>
             </div>
 
             <div class="card-body">
@@ -163,6 +162,54 @@
                         <a href="{{ route('admin.dosen.show', $data->id) }}" class="btn btn-sm btn-primary">Detail</a>
                         <button type="submt" class="btn btn-sm btn-danger"
                           onclick="handleDeleteDosen({{ $data->id }})">Hapus</button>
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <h4>Daftar Mahasiswa</h4>
+            </div>
+
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table" id="table-2">
+                  <thead>
+                    <tr>
+                      <th class="text-center">
+                        #
+                      </th>
+                      <th>Nama</th>
+                      <th>NIM</th>
+                      <th>Nilai Absen</th>
+                      <th>Nilai Tugas</th>
+                      <th>Nilai UTS</th>
+                      <th>Nilai UAS</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($nilai as $data)
+                    <tr>
+                      <td>
+                        {{ ($loop->index + 1) }}
+                      </td>
+                      <td>{{ $data->mahasiswa->nama }}</td>
+                      <td>{{ $data->mahasiswa->nim }}</td>
+                      <td>{{ $data->nilai_absen }}</td>
+                      <td>{{ $data->nilai_tugas }}</td>
+                      <td>{{ $data->nilai_uts }}</td>
+                      <td>{{ $data->nilai_uas }}</td>
+                      <td>
+                        <a href="{{ route('admin.mahasiswa.show', $data->mahasiswa->id) }}"
+                          class="btn btn-sm btn-primary">Detail</a>
+
+                        <button class="btn btn-sm btn-info" onclick="handleClick({{ $data }})">Edit</button>
                       </td>
                     </tr>
                     @endforeach
@@ -247,6 +294,36 @@
     </form>
   </div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="editNilai">
+  <div class="modal-dialog" role="document">
+    <form class="modal-content" method="POST" action="{{ route('admin.matakuliah.nilai', $matakuliah->id) }}">
+      @csrf
+      @method('PUT')
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Nilai</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <x-text-input name="nilai_absen" type="number" label="Nilai Absen" placeholder="Masukan nilai absen"
+          required="true" />
+        <x-text-input name="nilai_tugas" type="number" label="Nilai Tugas" placeholder="Masukan nilai tugas"
+          required="true" />
+        <x-text-input name="nilai_uts" type="number" label="Nilai UTS" placeholder="Masukan nilai UTS"
+          required="true" />
+        <x-text-input name="nilai_uas" type="number" label="Nilai UAS" placeholder="Masukan nilai UAS"
+          required="true" />
+        <input type="hidden" name="id_nilai" id="id_nilai">
+      </div>
+      <div class="modal-footer bg-whitesmoke br">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary">Edit</button>
+      </div>
+    </form>
+  </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -265,15 +342,33 @@
 
 <script>
   function handleDeleteDosen(id) {
-    $(function () {
-      $('#deleteDosenModal').modal('toggle');
-      $('#id_dosen').val(id);
-    });
-  }
+  $(function () {
+    $('#deleteDosenModal').modal('toggle');
+    $('#id_dosen').val(id);
+  });
+}
 
-  $("#table-1").dataTable({
+function handleClick(value) {
+  $(function () {
+    console.log(value)
+    $('#id_nilai').val(value.id);
+    $('#nilai_absen').val(value.nilai_absen);
+    $('#nilai_tugas').val(value.nilai_tugas);
+    $('#nilai_uts').val(value.nilai_uts);
+    $('#nilai_uas').val(value.nilai_uas);
+    $('#editNilai').modal('toggle');
+  });
+}
+
+$("#table-1").dataTable({
   "columnDefs": [
     { "sortable": false, "targets": [5] }
+  ]
+});
+
+$("#table-2").dataTable({
+  "columnDefs": [
+    { "sortable": false, "targets": [7] }
   ]
 });
 </script>

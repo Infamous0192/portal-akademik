@@ -45,7 +45,7 @@ class Matakuliah extends Model
 
     public function ruangan()
     {
-        return $this->belongsTo('ruangan', 'id_ruangan');
+        return $this->belongsTo(Ruangan::class, 'id_ruangan');
     }
 
     public function dosen()

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\Mahasiswa;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,11 +27,45 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('ruangan', Admin\RuanganController::class);
     Route::resource('mahasiswa', Admin\MahasiswaController::class);
     Route::resource('dosen', Admin\DosenController::class);
-    
+    Route::resource('tahun_akademik', Admin\TahunAkademikController::class);
+
+    Route::post('/tahun_akademik/upload', [Admin\TahunAkademikController::class, 'upload'])->name('tahun_akademik.upload');
+
     Route::resource('matakuliah', Admin\MatakuliahController::class);
     Route::controller(Admin\MatakuliahController::class)->prefix('matakuliah')->name('matakuliah.')->group(function () {
         Route::put('{matakuliah}/dosen', 'addDosen')->name('addDosen');
         Route::delete('{matakuliah}/dosen', 'removeDosen')->name('removeDosen');
+        Route::put('{matakuliah}/nilai', 'nilai')->name('nilai');
+    });
+
+    Route::prefix('krs')->name('krs.')->controller(Admin\KrsController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{krs}', 'show')->name('show');
+        Route::patch('/{krs}/accept', 'accept')->name('accept');
+        Route::patch('/{krs}/reject', 'reject')->name('reject');
+    });
+});
+
+Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasiswa'])->group(function () {
+    Route::get('/', [Mahasiswa\DashboardController::class, 'index'])->name('dashboard');
+
+    Route::prefix('krs')->name('krs.')->controller(Mahasiswa\KrsController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/print', 'print')->name('print');
+        Route::put('/{krs}/submit', 'submit')->name('submit');
+        Route::put('/{krs}/revise', 'revise')->name('revise');
+        Route::delete('/{krs}/matakuliah/{matakuliah}', 'removeMatakuliah')->name('removeMatakuliah');
+    });
+
+    Route::prefix('jadwal')->name('jadwal.')->controller(Mahasiswa\JadwalController::class)->group(function () {
+        Route::get('/kuliah', 'kuliah')->name('kuliah');
+        Route::get('/akademik', 'akademik')->name('akademik');
+    });
+
+    Route::prefix('hasil')->name('hasil.')->controller(Mahasiswa\HasilController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
     });
 });
 

@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DosenRequest;
 use App\Models\Prodi;
 use App\Models\Dosen;
+use App\Models\Matakuliah;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DosenController extends Controller
 {
@@ -46,7 +48,7 @@ class DosenController extends Controller
      */
     public function store(DosenRequest $request)
     {
-        $filename = Str::uuid() . $request->file('foto')->extension();
+        $filename = Str::uuid() . '.' . $request->file('foto')->extension();
         $path = "/uploads/$filename";
         $request->file('foto')->move(public_path('uploads'), $filename);
 
@@ -77,7 +79,9 @@ class DosenController extends Controller
      */
     public function show(Dosen $dosen)
     {
-        return view('admin.dosen.show', compact('dosen'));
+        $matakuliah = Matakuliah::whereIn('id', DB::table('matakuliah_dosen')->select('id_matakuliah')->where('id_dosen', $dosen->id))->get();
+
+        return view('admin.dosen.show', compact('dosen', 'matakuliah'));
     }
 
     /**
@@ -107,7 +111,7 @@ class DosenController extends Controller
         $data = $request->except(['foto']);
 
         if ($request->file('foto') != null) {
-            $filename = Str::uuid() . $request->file('foto')->extension();
+            $filename = Str::uuid() . '.' . $request->file('foto')->extension();
             $request->file('foto')->move(public_path('uploads'), $filename);
             $path = "/uploads/$filename";
             $data['foto'] = $path;
@@ -117,7 +121,7 @@ class DosenController extends Controller
         $data['id_fakultas'] = $prodi->id_fakultas;
 
         $dosen = Dosen::findOrFail($id);
-        
+
         $dosen->update([
             ...$data,
         ]);

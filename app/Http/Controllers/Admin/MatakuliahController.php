@@ -7,9 +7,12 @@ use App\Http\Requests\MatakuliahDosenRequest;
 use App\Http\Requests\MatakuliahRequest;
 use App\Models\Dosen;
 use App\Models\Fakultas;
+use App\Models\Krs;
 use App\Models\Matakuliah;
+use App\Models\Nilai;
 use App\Models\Prodi;
 use App\Models\Ruangan;
+use App\Models\TahunAkademik;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -79,12 +82,16 @@ class MatakuliahController extends Controller
 
         $dosen = Dosen::select('dosen.nama', 'dosen.id', 'dosen.nip')
             ->where('id_prodi', $matakuliah->id_prodi)
-            ->whereNotIn('id', DB::table('matakuliah_dosen')->select('id')->where('id_matakuliah', $matakuliah->id))
+            ->whereNotIn('id', DB::table('matakuliah_dosen')->select('id_dosen')->where('id_matakuliah', $matakuliah->id))
             ->get()->map(function ($item, $key) {
                 return ['label' => $item->nama . ' (' . $item->nip . ')', 'value' => $item->id];
             });
 
-        return view('admin.matakuliah.show', compact('matakuliah', 'prodi', 'ruangan', 'dosen'));
+        $akademik = TahunAkademik::orderByDesc('created_at')->first();
+        $nilai = Nilai::where('id_matakuliah', $matakuliah->id)
+            ->whereIn('id_krs', Krs::select('id')->where('id_tahun_akademik', $akademik->id))->get();
+
+        return view('admin.matakuliah.show', compact('matakuliah', 'prodi', 'ruangan', 'dosen', 'nilai'));
     }
 
     /**
@@ -104,7 +111,7 @@ class MatakuliahController extends Controller
 
         $dosen = Dosen::select('dosen.nama', 'dosen.id', 'dosen.nip')
             ->where('id_prodi', $matakuliah->id_prodi)
-            ->whereNotIn('id', DB::table('matakuliah_dosen')->select('id')->where('id_matakuliah', $matakuliah->id))
+            ->whereNotIn('id', DB::table('matakuliah_dosen')->select('id_dosen')->where('id_matakuliah', $matakuliah->id))
             ->get()->map(function ($item, $key) {
                 return ['label' => $item->nama . ' (' . $item->nip . ')', 'value' => $item->id];
             });
@@ -142,6 +149,26 @@ class MatakuliahController extends Controller
         $matakuliah->delete();
 
         return redirect()->route('admin.matakuliah.index')->with('success', 'Matakuliah berhasil dihapus');
+    }
+
+    /**
+     * Edit nilai.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function nilai(Matakuliah $matakuliah, Request $request)
+    {
+        $nilai = Nilai::find($request->id_nilai);
+
+        $nilai->nilai_absen = $request->get('nilai_absen');
+        $nilai->nilai_tugas = $request->get('nilai_tugas');
+        $nilai->nilai_uts = $request->get('nilai_uts');
+        $nilai->nilai_uas = $request->get('nilai_uas');
+
+        $nilai->save();
+
+        return redirect()->route('admin.matakuliah.show', $matakuliah->id)->with('success', 'Nilai berhasil diedit');
     }
 
     /**
