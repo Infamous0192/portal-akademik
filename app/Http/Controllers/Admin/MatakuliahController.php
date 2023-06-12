@@ -14,6 +14,7 @@ use App\Models\Prodi;
 use App\Models\Ruangan;
 use App\Models\TahunAkademik;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -193,10 +194,11 @@ class MatakuliahController extends Controller
      */
     public function addDosen(Matakuliah $matakuliah, MatakuliahDosenRequest $dosen)
     {
-        DB::table('matakuliah_dosen')->insert([
-            'id_matakuliah' => $matakuliah->id,
-            'id_dosen' => $dosen->get('id_dosen'),
-        ]);
+        try {
+            Matakuliah::addDosen($matakuliah->id, $dosen->get('id_dosen'));
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.matakuliah.show', $matakuliah->id)->with('success', 'Dosen berhasil ditambahkan dari matakuliah');
     }

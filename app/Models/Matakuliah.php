@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -96,5 +97,36 @@ class Matakuliah extends Model
         }
 
         return $query->first()->room_usage == 0;
+    }
+
+    public static function addDosen($id_matakuliah, $id_dosen)
+    {
+        $matakuliah = DB::table('matakuliah')->where('id', $id_matakuliah)->first();
+        $waktu_mulai = $matakuliah->waktu_mulai;
+        $waktu_selesai = $matakuliah->waktu_selesai;
+
+        $query = DB::table('matakuliah_dosen AS md')
+            ->select(DB::raw('COUNT(*) as availability'))
+            ->join('matakuliah AS m', 'md.id_matakuliah', '=', 'm.id')
+            ->where('md.id_dosen', '=', $id_dosen)
+            ->where(function ($query) use ($waktu_mulai, $waktu_selesai) {
+                $query->where(function ($query) use ($waktu_mulai, $waktu_selesai) {
+                    $query->where('m.waktu_mulai', '<=', $waktu_selesai)
+                        ->where('m.waktu_selesai', '>=', $waktu_mulai);
+                })->orWhere(function ($query) use ($waktu_mulai, $waktu_selesai) {
+                    $query->where('m.waktu_mulai', '>=', $waktu_mulai)
+                        ->where('m.waktu_mulai', '<=', $waktu_selesai);
+                });
+            });
+
+        $isAvailable = $query->first()->availability == 0;
+        if (!$isAvailable) {
+            throw new Exception('Dosen tidak tersedia');
+        }
+
+        DB::table('matakuliah_dosen')->insert([
+            'id_matakuliah' => $matakuliah->id,
+            'id_dosen' => $id_dosen,
+        ]);
     }
 }
