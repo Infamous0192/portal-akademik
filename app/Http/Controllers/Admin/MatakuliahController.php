@@ -56,6 +56,13 @@ class MatakuliahController extends Controller
      */
     public function store(MatakuliahRequest $request)
     {
+        $waktu_mulai = Carbon::createFromFormat('h:i a', $request->get('waktu_mulai'))->format('H:i:s');
+        $waktu_selesai = Carbon::createFromFormat('h:i a', $request->get('waktu_selesai'))->format('H:i:s');
+
+        if (!Matakuliah::isRoomAvailable($request->get('hari'), $request->get('id_ruangan'), $waktu_mulai, $waktu_selesai)) {
+            return redirect()->back()->withInput()->with('error', 'Ruangan telah terpakai');
+        }
+
         Matakuliah::create([
             ...$request->except(['waktu_mulai', 'waktu_selesai']),
             'waktu_mulai' => Carbon::createFromFormat('h:i a', $request->get('waktu_mulai'))->format('H:i:s'),
@@ -129,6 +136,13 @@ class MatakuliahController extends Controller
     public function update(MatakuliahRequest $request, $id)
     {
         $matakuliah = Matakuliah::findOrFail($id);
+        $waktu_mulai = Carbon::createFromFormat('h:i a', $request->get('waktu_mulai'))->format('H:i:s');
+        $waktu_selesai = Carbon::createFromFormat('h:i a', $request->get('waktu_selesai'))->format('H:i:s');
+
+        if (!Matakuliah::isRoomAvailable($request->get('hari'), $request->get('id_ruangan'), $waktu_mulai, $waktu_selesai, $matakuliah->id)) {
+            return redirect()->back()->withInput()->with('error', 'Ruangan telah terpakai');
+        }
+
         $matakuliah->update([
             ...$request->except(['waktu_mulai', 'waktu_selesai']),
             'waktu_mulai' => Carbon::createFromFormat('h:i a', $request->get('waktu_mulai'))->format('H:i:s'),
