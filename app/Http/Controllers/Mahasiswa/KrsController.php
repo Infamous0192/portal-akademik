@@ -103,6 +103,10 @@ class KrsController extends Controller
         $max_krs = 20;
         $matakuliah = Matakuliah::find($request->get('id_matakuliah'));
 
+        if (Krs::isScheduleConflict($mahasiswa->id, $request->get('id_matakuliah'))) {
+            return redirect()->back()->with('error', 'Jadwal bentrok');
+        }
+
         $krs = Krs::where('id_mahasiswa', $mahasiswa->id)
             ->where('id_tahun_akademik', $request->get('id_tahun_akademik'))
             ->first();
@@ -119,6 +123,10 @@ class KrsController extends Controller
 
         foreach ($sks as $item) {
             $max_krs -= $item->sks;
+        }
+
+        if ($matakuliah->sks > $max_krs) {
+            return redirect()->back()->with('error', 'SKS melebih batas maksimal');
         }
 
         Nilai::create([

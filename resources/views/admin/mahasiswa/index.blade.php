@@ -52,7 +52,7 @@
                         #
                       </th>
                       <th>Nama</th>
-                      <th>NIP</th>
+                      <th>NIM</th>
                       <th>Jenis Kelamin</th>
                       <th>No Telepon</th>
                       <th>Fakultas</th>
@@ -66,7 +66,7 @@
                         {{ ($loop->index + 1) }}
                       </td>
                       <td>{{ $data->nama }}</td>
-                      <td>{{ $data->nip }}</td>
+                      <td>{{ $data->nim }}</td>
                       <td>{{ $data->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
                       <td>{{ $data->no_telepon }}</td>
                       <td>{{ $data->fakultas->nama }}</td>
