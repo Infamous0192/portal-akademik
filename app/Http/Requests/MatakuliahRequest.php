@@ -27,7 +27,10 @@ class MatakuliahRequest extends FormRequest
     {
         return [
             'nama' => 'required',
-            'kode' => 'required',
+            'kode' => [
+                'required',
+                Rule::unique(\App\Models\Matakuliah::class)->ignore($this->route('matakuliah'))
+            ],
             'sks' => 'required|numeric|min:0',
             'semester' => 'required|numeric|min:1',
             'hari' => 'required',
