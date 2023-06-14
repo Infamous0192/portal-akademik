@@ -51,11 +51,13 @@
                       <th class="text-center">
                         #
                       </th>
-                      <th>Nama</th>
-                      <th>Kode</th>
+                      <th>Matakuliah</th>
                       <th>Jumlah SKS</th>
-                      <th>Semester</th>
                       <th>Kategori</th>
+                      <th>Jadwal</th>
+                      <th>Ruangan</th>
+                      <th>Program Studi</th>
+                      <th>Dosen Pengampu</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -65,11 +67,27 @@
                       <td>
                         {{ ($loop->index + 1) }}
                       </td>
-                      <td>{{ $data->nama }}</td>
-                      <td>{{ $data->kode }}</td>
+                      <td class="py-2">
+                        <strong>{{ $data->kode }}</strong>
+                        <div>{{ $data->nama }}</div>
+                        <div>Semester {{ $data->semester }}</div>
+                      </td>
                       <td>{{ $data->sks }}</td>
-                      <td>{{ $data->semester }}</td>
                       <td>{{ $data->kategori == 'W' ? 'Wajib' : 'Peminatan' }}</td>
+                      <td>{{ $data->waktu_mulai }} - {{ $data->waktu_selesai }}</td>
+                      <td>{{ $data->ruangan->nama }}</td>
+                      <td>{{ $data->prodi->nama }}</td>
+                      <td>
+                        @if (count($data->dosen) > 0)
+                        <ul class="pl-0">
+                          @foreach ($data->dosen as $dosen)
+                          <li>{{ $dosen->nama }}</li>
+                          @endforeach
+                        </ul>
+                        @else
+                        <div>(Belum Ada Dosen Pengampu)</div>
+                        @endif
+                      </td>
                       <td><a href="{{ route('admin.matakuliah.show', $data->id) }}"
                           class="btn btn-sm btn-primary">Detail</a></td>
                     </tr>

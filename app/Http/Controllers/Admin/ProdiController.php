@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProdiRequest;
 use App\Models\Fakultas;
+use App\Models\Matakuliah;
 use App\Models\Prodi;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -62,7 +63,9 @@ class ProdiController extends Controller
             return ['label' => $item->nama, 'value' => $item->id];
         });
 
-        return view('admin.prodi.show', compact('prodi', 'fakultas'));
+        $matakuliah = Matakuliah::where('id_prodi', $prodi->id)->get();
+
+        return view('admin.prodi.show', compact('prodi', 'fakultas', 'matakuliah'));
     }
 
     /**

@@ -42,7 +42,7 @@ class Matakuliah extends Model
 
     public function prodi()
     {
-        return $this->belongsTo('prodi', 'id_prodi');
+        return $this->belongsTo(Prodi::class, 'id_prodi');
     }
 
     public function ruangan()
