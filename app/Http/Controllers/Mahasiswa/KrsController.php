@@ -61,7 +61,7 @@ class KrsController extends Controller
         $krs = Krs::where('id_mahasiswa', $mahasiswa->id)
             ->where('id_tahun_akademik', $akademik->id)
             ->first();
-        $matakuliah = Matakuliah::whereIn('semester', $akademik->semester == 'ganjil' ? [1, 3, 5, 7] : [2, 4, 6, 8]);
+        $matakuliah = Matakuliah::whereIn('semester', $akademik->semester == 'ganjil' ? [1, 3, 5, 7] : [2, 4, 6, 8])->where('id_prodi', $mahasiswa->id_prodi);
 
         if ($krs == null) {
             return view('mahasiswa.krs.create', [
@@ -105,6 +105,10 @@ class KrsController extends Controller
 
         if (Krs::isScheduleConflict($mahasiswa->id, $request->get('id_matakuliah'))) {
             return redirect()->back()->with('error', 'Jadwal bentrok');
+        }
+
+        if (count($matakuliah->dosen) == 0) {
+            return redirect()->back()->with('error', 'Belum ada dosen pengampu');
         }
 
         $krs = Krs::where('id_mahasiswa', $mahasiswa->id)
