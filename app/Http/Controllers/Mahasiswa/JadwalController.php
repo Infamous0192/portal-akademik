@@ -21,7 +21,7 @@ class JadwalController extends Controller
      */
     public function kuliah()
     {
-        $akademik = TahunAkademik::orderByDesc('created_at')->first();
+        $akademik = TahunAkademik::orderBy('id', 'desc')->first();
         $mahasiswa = Mahasiswa::where('id_user', Auth::user()->id)->first();
         $krs = Krs::where('id_mahasiswa', $mahasiswa->id)
             ->where('id_tahun_akademik', $akademik->id)

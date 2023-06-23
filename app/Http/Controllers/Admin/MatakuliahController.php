@@ -95,7 +95,7 @@ class MatakuliahController extends Controller
                 return ['label' => $item->nama . ' (' . $item->nip . ')', 'value' => $item->id];
             });
 
-        $akademik = TahunAkademik::orderByDesc('created_at')->first();
+        $akademik = TahunAkademik::orderBy('id', 'desc')->first();
         $nilai = Nilai::where('id_matakuliah', $matakuliah->id)
             ->whereIn('id_krs', Krs::select('id')->where('id_tahun_akademik', $akademik->id))->get();
 

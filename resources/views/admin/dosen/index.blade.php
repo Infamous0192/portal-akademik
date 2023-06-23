@@ -53,8 +53,7 @@
                       </th>
                       <th>Nama</th>
                       <th>NIP</th>
-                      <th>Jenis Kelamin</th>
-                      <th>No Telepon</th>
+                      <th>Program Studi</th>
                       <th>Fakultas</th>
                       <th>Action</th>
                     </tr>
@@ -67,8 +66,7 @@
                       </td>
                       <td>{{ $data->nama }}</td>
                       <td>{{ $data->nip }}</td>
-                      <td>{{ $data->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                      <td>{{ $data->no_telepon }}</td>
+                      <td>{{ $data->prodi->nama }}</td>
                       <td>{{ $data->fakultas->nama }}</td>
                       <td><a href="{{ route('admin.dosen.show', $data->id) }}" class="btn btn-sm btn-primary">Detail</a>
                       </td>

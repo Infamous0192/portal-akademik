@@ -55,6 +55,11 @@ class Matakuliah extends Model
         return $this->belongsToMany(Dosen::class, 'matakuliah_dosen', 'id_matakuliah', 'id_dosen');
     }
 
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class, 'id_matakuliah');
+    }
+
     public static function isScheduleAvailable($hari, $waktu_mulai, $waktu_selesai)
     {
         $query = DB::table('matakuliah')

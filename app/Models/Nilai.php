@@ -49,4 +49,9 @@ class Nilai extends Model
     {
         return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa');
     }
+
+    public function tahunAkademik()
+    {
+        return $this->belongsTo(TahunAkademik::class, 'id_tahun_akademik');
+    }
 }

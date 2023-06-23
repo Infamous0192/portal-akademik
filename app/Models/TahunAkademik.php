@@ -26,4 +26,9 @@ class TahunAkademik extends Model
      * @var array
      */
     protected $hidden = [];
+
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class, 'id_tahun_akademik');
+    }
 }
