@@ -25,7 +25,8 @@ class Nilai extends Model
         'nilai_uas',
         'id_mahasiswa',
         'id_krs',
-        'id_matakuliah'
+        'id_matakuliah',
+        'id_tahun_akademik'
     ];
 
     /**

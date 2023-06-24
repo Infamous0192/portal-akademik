@@ -20,6 +20,16 @@
     </div>
     @endif
 
+    @if ($akademik == null || $akademik->status == 1)
+
+    <div class="alert alert-info">
+      <div class="alert-body">
+        Pengisian KRS belum dibuka
+      </div>
+    </div>
+
+    @else
+
     <div class="section-body">
       <div class="row">
         <div class="col-12">
@@ -178,6 +188,7 @@
         </div>
       </div>
     </div>
+    @endif
   </section>
 </div>
 @endsection

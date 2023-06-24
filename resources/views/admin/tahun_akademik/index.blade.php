@@ -82,8 +82,13 @@
               <button class="btn btn-primary" data-toggle="modal" data-target="#uploadJadwal">Upload Jadwal</button>
             </div>
             <div class="card-body">
-              <iframe src="{{ $jadwal->file }}"
-                frameBorder="0" scrolling="auto" height="720px" width="100%"></iframe>
+
+              @if ($jadwal != null)
+              <iframe src="{{ $jadwal->file }}" frameBorder="0" scrolling="auto" height="720px" width="100%"></iframe>
+
+              @else
+                <p>Belum ada jadwal</p>
+              @endif
 
             </div>
           </div>

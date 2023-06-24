@@ -120,8 +120,8 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <x-select name="id_prodi" label="Program Studi" placeholder="Pilih program studi"
-                    :value="Request::get('prodi')" :data="$prodi" :value="$matakuliah->id_prodi" />
+                  <x-select name="id_fakultas" label="Program Studi" placeholder="Pilih program studi"
+                    :value="Request::get('fakultas')" :data="$fakultas" :value="$matakuliah->id_fakultas" />
                 </div>
                 <div class="col-12 col-md-6">
                   <x-select name="id_ruangan" label="Ruangan" placeholder="Pilih ruangan"

@@ -29,7 +29,7 @@ class Matakuliah extends Model
         'waktu_mulai',
         'waktu_selesai',
         'kategori',
-        'id_prodi',
+        'id_fakultas',
         'id_ruangan',
     ];
 
@@ -40,9 +40,9 @@ class Matakuliah extends Model
      */
     protected $hidden = [];
 
-    public function prodi()
+    public function fakultas()
     {
-        return $this->belongsTo(Prodi::class, 'id_prodi');
+        return $this->belongsTo(Fakultas::class, 'id_fakultas');
     }
 
     public function ruangan()

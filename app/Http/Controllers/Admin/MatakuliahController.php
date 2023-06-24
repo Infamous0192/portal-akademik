@@ -10,7 +10,6 @@ use App\Models\Fakultas;
 use App\Models\Krs;
 use App\Models\Matakuliah;
 use App\Models\Nilai;
-use App\Models\Prodi;
 use App\Models\Ruangan;
 use App\Models\TahunAkademik;
 use Carbon\Carbon;
@@ -39,14 +38,14 @@ class MatakuliahController extends Controller
      */
     public function create()
     {
-        $prodi = Prodi::all()->map(function ($item, $key) {
-            return ['label' => $item->nama . ' (' . $item->fakultas->nama . ')', 'value' => $item->id];
+        $fakultas = Fakultas::all()->map(function ($item, $key) {
+            return ['label' => $item->nama, 'value' => $item->id];
         });
         $ruangan = Ruangan::all()->map(function ($item, $key) {
             return ['label' => $item->nama . ' (' . $item->gedung->nama . ')', 'value' => $item->id];
         });
 
-        return view('admin.matakuliah.create', compact('prodi', 'ruangan'));
+        return view('admin.matakuliah.create', compact('fakultas', 'ruangan'));
     }
 
     /**
@@ -81,15 +80,15 @@ class MatakuliahController extends Controller
      */
     public function show(Matakuliah $matakuliah)
     {
-        $prodi = Prodi::all()->map(function ($item, $key) {
-            return ['label' => $item->nama . ' (' . $item->fakultas->nama . ')', 'value' => $item->id];
+        $fakultas = Fakultas::all()->map(function ($item, $key) {
+            return ['label' => $item->nama, 'value' => $item->id];
         });
         $ruangan = Ruangan::all()->map(function ($item, $key) {
             return ['label' => $item->nama . ' (' . $item->gedung->nama . ')', 'value' => $item->id];
         });
 
         $dosen = Dosen::select('dosen.nama', 'dosen.id', 'dosen.nip')
-            ->where('id_prodi', $matakuliah->id_prodi)
+            ->where('id_fakultas', $matakuliah->id_fakultas)
             ->whereNotIn('id', DB::table('matakuliah_dosen')->select('id_dosen')->where('id_matakuliah', $matakuliah->id))
             ->get()->map(function ($item, $key) {
                 return ['label' => $item->nama . ' (' . $item->nip . ')', 'value' => $item->id];
@@ -97,9 +96,9 @@ class MatakuliahController extends Controller
 
         $akademik = TahunAkademik::orderBy('id', 'desc')->first();
         $nilai = Nilai::where('id_matakuliah', $matakuliah->id)
-            ->whereIn('id_krs', Krs::select('id')->where('id_tahun_akademik', $akademik->id))->get();
+            ->whereIn('id_krs', Krs::select('id')->where('id_tahun_akademik', $akademik->id ?? 0))->get();
 
-        return view('admin.matakuliah.show', compact('matakuliah', 'prodi', 'ruangan', 'dosen', 'nilai'));
+        return view('admin.matakuliah.show', compact('matakuliah', 'fakultas', 'ruangan', 'dosen', 'nilai'));
     }
 
     /**
@@ -110,21 +109,21 @@ class MatakuliahController extends Controller
      */
     public function edit(Matakuliah $matakuliah)
     {
-        $prodi = Prodi::all()->map(function ($item, $key) {
-            return ['label' => $item->nama . ' (' . $item->fakultas->nama . ')', 'value' => $item->id];
+        $fakultas = Fakultas::all()->map(function ($item, $key) {
+            return ['label' => $item->nama, 'value' => $item->id];
         });
         $ruangan = Ruangan::all()->map(function ($item, $key) {
             return ['label' => $item->nama . ' (' . $item->gedung->nama . ')', 'value' => $item->id];
         });
 
         $dosen = Dosen::select('dosen.nama', 'dosen.id', 'dosen.nip')
-            ->where('id_prodi', $matakuliah->id_prodi)
+            ->where('id_fakultas', $matakuliah->id_fakultas)
             ->whereNotIn('id', DB::table('matakuliah_dosen')->select('id_dosen')->where('id_matakuliah', $matakuliah->id))
             ->get()->map(function ($item, $key) {
                 return ['label' => $item->nama . ' (' . $item->nip . ')', 'value' => $item->id];
             });
 
-        return view('admin.matakuliah.show', compact('matakuliah', 'prodi', 'ruangan', 'dosen'));
+        return view('admin.matakuliah.show', compact('matakuliah', 'fakultas', 'ruangan', 'dosen'));
     }
 
     /**

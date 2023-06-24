@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('id_mahasiswa')->unsigned();
             $table->integer('id_matakuliah')->unsigned();
             $table->integer('id_krs')->unsigned();
+            $table->integer('id_tahun_akademik')->unsigned();
 
             $table->foreign('id_mahasiswa')
                 ->references('id')
@@ -37,6 +38,11 @@ return new class extends Migration
             $table->foreign('id_krs')
                 ->references('id')
                 ->on('krs')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreign('id_tahun_akademik')
+                ->references('id')
+                ->on('tahun_akademik')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });

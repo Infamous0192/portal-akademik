@@ -37,9 +37,9 @@ class MatakuliahRequest extends FormRequest
             'waktu_mulai' => 'required',
             'waktu_selesai' => 'required',
             'kategori' => 'required',
-            'id_prodi' => [
+            'id_fakultas' => [
                 'required',
-                Rule::exists(\App\Models\Prodi::class, 'id')
+                Rule::exists(\App\Models\Fakultas::class, 'id')
             ],
             'id_ruangan' => [
                 'required',

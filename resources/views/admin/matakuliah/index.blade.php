@@ -56,7 +56,7 @@
                       <th>Kategori</th>
                       <th>Jadwal</th>
                       <th>Ruangan</th>
-                      <th>Program Studi</th>
+                      <th>Fakultas</th>
                       <th>Dosen Pengampu</th>
                       <th>Action</th>
                     </tr>
@@ -76,7 +76,7 @@
                       <td>{{ $data->kategori == 'W' ? 'Wajib' : 'Peminatan' }}</td>
                       <td>{{ $data->waktu_mulai }} - {{ $data->waktu_selesai }}</td>
                       <td>{{ $data->ruangan->nama }}</td>
-                      <td>{{ $data->prodi->nama }}</td>
+                      <td>{{ $data->fakultas->nama }}</td>
                       <td>
                         @if (count($data->dosen) > 0)
                         <ul class="pl-0">

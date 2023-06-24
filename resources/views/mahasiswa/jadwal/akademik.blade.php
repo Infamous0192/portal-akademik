@@ -32,7 +32,11 @@
           <h4>Jadwal Akademik</h4>
         </div>
         <div class="card-body">
+          @if ($jadwal != null)
           <iframe src="{{ $jadwal->file }}" frameBorder="0" scrolling="auto" height="720px" width="100%"></iframe>
+          @else
+          <p>Belum ada Jadwal Akademik</p>
+          @endif
 
         </div>
       </div>

@@ -24,12 +24,12 @@ return new class extends Migration
             $table->time('waktu_selesai');
             $table->enum('kategori', ['W', 'P']);
             $table->timestamps();
-            $table->integer('id_prodi')->unsigned();
+            $table->integer('id_fakultas')->unsigned();
             $table->integer('id_ruangan')->unsigned();
 
-            $table->foreign('id_prodi')
+            $table->foreign('id_fakultas')
                 ->references('id')
-                ->on('prodi')
+                ->on('fakultas')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->foreign('id_ruangan')

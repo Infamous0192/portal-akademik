@@ -25,7 +25,7 @@ class KrsController extends Controller
         $akademik = TahunAkademik::orderBy('id', 'desc')->first();
         $mahasiswa = Mahasiswa::where('id_user', Auth::user()->id)->first();
         $krs = Krs::where('id_mahasiswa', $mahasiswa->id)
-            ->where('id_tahun_akademik', $akademik->id)
+            ->where('id_tahun_akademik', $akademik->id ?? 0)
             ->first();
 
         $data = [
