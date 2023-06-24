@@ -148,11 +148,15 @@
                         <div>Semester {{ $data->semester }}</div>
                       </td>
                       <td>
+                        @if (count($data->dosen) > 0)
                         <ul class="pl-0">
                           @foreach ($data->dosen as $dosen)
                           <li>{{ $dosen->nama }} ({{ $dosen->nip }})</li>
                           @endforeach
                         </ul>
+                        @else
+                        Belum ada dosen pengampu
+                        @endif
                       </td>
                       <td>
                         <div>{{ $data->hari }}</div>

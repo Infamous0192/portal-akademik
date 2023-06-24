@@ -14,6 +14,7 @@ use App\Models\Ruangan;
 use App\Models\TahunAkademik;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,7 +27,10 @@ class MatakuliahController extends Controller
      */
     public function index()
     {
-        $matakuliah = Matakuliah::all();
+        $matakuliah = Matakuliah::withCount(['nilai' => function (Builder $query) {
+            $akademik = TahunAkademik::orderBy('id', 'desc')->first();
+            $query->where('id_tahun_akademik', $akademik->id ?? 0);
+        }])->get();
 
         return view('admin.matakuliah.index', compact('matakuliah'));
     }
@@ -98,7 +102,14 @@ class MatakuliahController extends Controller
         $nilai = Nilai::where('id_matakuliah', $matakuliah->id)
             ->whereIn('id_krs', Krs::select('id')->where('id_tahun_akademik', $akademik->id ?? 0))->get();
 
-        return view('admin.matakuliah.show', compact('matakuliah', 'fakultas', 'ruangan', 'dosen', 'nilai'));
+        $rekapitulasi = Nilai::whereIn('id', function ($query) use ($matakuliah) {
+            $query->select(DB::raw('MAX(id)'))
+                ->from('nilai')
+                ->where('id_matakuliah', $matakuliah->id)
+                ->groupBy('id_mahasiswa');
+        })->get();
+
+        return view('admin.matakuliah.show', compact('matakuliah', 'rekapitulasi', 'fakultas', 'ruangan', 'dosen', 'nilai'));
     }
 
     /**

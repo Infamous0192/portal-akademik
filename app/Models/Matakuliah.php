@@ -114,6 +114,7 @@ class Matakuliah extends Model
             ->select(DB::raw('COUNT(*) as availability'))
             ->join('matakuliah AS m', 'md.id_matakuliah', '=', 'm.id')
             ->where('md.id_dosen', '=', $id_dosen)
+            ->where('m.hari', '=', $matakuliah->hari)
             ->where(function ($query) use ($waktu_mulai, $waktu_selesai) {
                 $query->where(function ($query) use ($waktu_mulai, $waktu_selesai) {
                     $query->where('m.waktu_mulai', '<=', $waktu_selesai)

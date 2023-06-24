@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('krs', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('status', ['pending', 'rejected', 'accepted']);
+            $table->enum('status', ['pending', 'process', 'rejected', 'accepted']);
             $table->timestamps();
             $table->integer('id_mahasiswa')->unsigned();
-            $table->integer('id_matakuliah')->unsigned();
             $table->integer('id_tahun_akademik')->unsigned();
 
             $table->foreign('id_mahasiswa')

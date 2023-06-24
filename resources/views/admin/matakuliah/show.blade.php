@@ -229,6 +229,47 @@
               </div>
             </div>
           </div>
+
+          <div class="card mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <h4>Rekapitulasi Nilai</h4>
+            </div>
+
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table" id="table-2">
+                  <thead>
+                    <tr>
+                      <th class="text-center">
+                        #
+                      </th>
+                      <th>Nama</th>
+                      <th>NIM</th>
+                      <th>Nilai Absen</th>
+                      <th>Nilai Tugas</th>
+                      <th>Nilai UTS</th>
+                      <th>Nilai UAS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($rekapitulasi as $data)
+                    <tr>
+                      <td>
+                        {{ ($loop->index + 1) }}
+                      </td>
+                      <td>{{ $data->mahasiswa->nama }}</td>
+                      <td>{{ $data->mahasiswa->nim }}</td>
+                      <td>{{ $data->nilai_absen }}</td>
+                      <td>{{ $data->nilai_tugas }}</td>
+                      <td>{{ $data->nilai_uts }}</td>
+                      <td>{{ $data->nilai_uas }}</td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

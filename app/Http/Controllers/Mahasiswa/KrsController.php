@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Fakultas;
 use App\Models\Krs;
 use App\Models\Mahasiswa;
 use App\Models\Matakuliah;
 use App\Models\Nilai;
 use App\Models\TahunAkademik;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +63,11 @@ class KrsController extends Controller
         $krs = Krs::where('id_mahasiswa', $mahasiswa->id)
             ->where('id_tahun_akademik', $akademik->id)
             ->first();
-        $matakuliah = Matakuliah::whereIn('semester', $akademik->semester == 'ganjil' ? [1, 3, 5, 7] : [2, 4, 6, 8])->where('id_prodi', $mahasiswa->id_prodi);
+        $matakuliah = Matakuliah::whereIn('semester', $akademik->semester == 'ganjil' ? [1, 3, 5, 7] : [2, 4, 6, 8])->where('id_fakultas', $mahasiswa->id_fakultas);
+        $matakuliah->withCount(['nilai' => function (Builder $query) use ($akademik) {
+            $akademik = TahunAkademik::orderBy('id', 'desc')->first();
+            $query->where('id_tahun_akademik', $akademik->id ?? 0);
+        }]);
 
         if ($krs == null) {
             return view('mahasiswa.krs.create', [
@@ -75,6 +81,10 @@ class KrsController extends Controller
 
         $matakuliah = Matakuliah::whereIn('semester', $akademik->semester == 'ganjil' ? [1, 3, 5, 7] : [2, 4, 6, 8])
             ->whereNotIn('id', Nilai::select('id_matakuliah')->where('id_krs', $krs->id))
+            ->withCount(['nilai' => function (Builder $query) use ($akademik) {
+                $akademik = TahunAkademik::orderBy('id', 'desc')->first();
+                $query->where('id_tahun_akademik', $akademik->id ?? 0);
+            }])
             ->get();
 
         $nilai = Nilai::where('id_krs', $krs->id)->get();
@@ -140,7 +150,8 @@ class KrsController extends Controller
             'nilai_uas' => 0,
             'id_mahasiswa' => $mahasiswa->id,
             'id_matakuliah' => $matakuliah->id,
-            'id_krs' => $krs->id
+            'id_krs' => $krs->id,
+            'id_tahun_akademik' => $request->get('id_tahun_akademik')
         ]);
 
         return redirect()->route('mahasiswa.krs.index')->with('success', 'KRS berhasil ditambahkan');

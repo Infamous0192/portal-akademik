@@ -54,9 +54,8 @@
                       <th>Matakuliah</th>
                       <th>Jumlah SKS</th>
                       <th>Kategori</th>
-                      <th>Jadwal</th>
-                      <th>Ruangan</th>
                       <th>Fakultas</th>
+                      <th>Jumlah Mahasiswa</th>
                       <th>Dosen Pengampu</th>
                       <th>Action</th>
                     </tr>
@@ -74,9 +73,8 @@
                       </td>
                       <td>{{ $data->sks }}</td>
                       <td>{{ $data->kategori == 'W' ? 'Wajib' : 'Peminatan' }}</td>
-                      <td>{{ $data->waktu_mulai }} - {{ $data->waktu_selesai }}</td>
-                      <td>{{ $data->ruangan->nama }}</td>
                       <td>{{ $data->fakultas->nama }}</td>
+                      <td>{{ $data->nilai_count }}</td>
                       <td>
                         @if (count($data->dosen) > 0)
                         <ul class="pl-0">
@@ -114,7 +112,7 @@
 <script>
   $("#table-1").dataTable({
   "columnDefs": [
-    { "sortable": false, "targets": [5] }
+    { "sortable": false, "targets": [7, 6] }
   ]
 });
 </script>

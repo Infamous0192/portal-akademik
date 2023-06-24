@@ -15,9 +15,13 @@
                 <a class="nav-link" href="{{ route('mahasiswa.krs.index') }}"><i class="fas fa-th-large"></i>
                     <span>Rencana Studi</span></a>
             </li>
-            <li class="{{ Request::is('mahasiswa/hasil*') ? 'active' : '' }}">
+            <li class="{{ Request::is('mahasiswa/hasil') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('mahasiswa.hasil.index') }}"><i class="fas fa-th-large"></i>
                     <span>Hasil Studi</span></a>
+            </li>
+            <li class="{{ Request::is('mahasiswa/hasil/rekap') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('mahasiswa.hasil.rekap') }}"><i class="fas fa-th-large"></i>
+                    <span>Rekapitulasi Hasil Studi</span></a>
             </li>
             <li class="{{ Request::is('mahasiswa/jadwal/kuliah') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('mahasiswa.jadwal.kuliah') }}"><i class="fas fa-th-large"></i>

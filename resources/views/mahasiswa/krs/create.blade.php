@@ -80,6 +80,7 @@
                       <th>Jadwal</th>
                       <th>Dosen</th>
                       <th>SKS</th>
+                      <th>Jumlah Mahasiswa</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -99,13 +100,18 @@
                         <div>{{ $data->waktu_mulai }} - {{ $data->waktu_selesai }}</div>
                       </td>
                       <td>
+                        @if (count($data->dosen) > 0)
                         <ul class="pl-0">
                           @foreach ($data->dosen as $dosen)
                           <li>{{ $dosen->nama }} ({{ $dosen->nip }})</li>
                           @endforeach
                         </ul>
+                        @else
+                        Belum ada dosen pengampu
+                        @endif
                       </td>
                       <td>{{ $data->sks }}</td>
+                      <td>{{ $data->nilai_count }}</td>
                       <td>
                         <form method="POST" class="form-inline" action="{{ route('mahasiswa.krs.store') }}">
                           @csrf

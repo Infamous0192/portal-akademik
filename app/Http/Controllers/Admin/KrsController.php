@@ -49,6 +49,8 @@ class KrsController extends Controller
         $krs->status = 'rejected';
         $krs->save();
 
+        // Nilai::where('id_krs', $krs->id)->delete();
+
         return redirect()->route('admin.krs.index')->with('success', 'KRS berhasil ditolak');
     }
 

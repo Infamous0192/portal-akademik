@@ -66,6 +66,7 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
 
     Route::prefix('hasil')->name('hasil.')->controller(Mahasiswa\HasilController::class)->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/rekap', 'rekap')->name('rekap');
     });
 });
 

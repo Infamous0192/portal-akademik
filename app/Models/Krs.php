@@ -43,11 +43,6 @@ class Krs extends Model
         return $this->belongsTo(TahunAkademik::class, 'id_tahun_akademik');
     }
 
-    public function matakuliah()
-    {
-        return $this->belongsTo(Matakuliah::class, 'id_matakuliah');
-    }
-
     public static function isScheduleConflict($id_mahasiswa, $id_matakuliah)
     {
         $matakuliah = DB::table('matakuliah')

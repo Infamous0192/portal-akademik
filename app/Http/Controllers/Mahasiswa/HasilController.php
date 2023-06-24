@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\DB;
 class HasilController extends Controller
 {
     /**
-     * Display hasil.
+     * Display rekap.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function rekap()
     {
         $mahasiswa = Mahasiswa::where('id_user', Auth::user()->id)->first();
 
@@ -37,6 +37,31 @@ class HasilController extends Controller
             ->groupBy('id_matakuliah')
             ->get();
 
-        return view('mahasiswa.hasil.index', compact('nilai'));
+        return view('mahasiswa.hasil.rekap', compact('nilai'));
+    }
+
+    /**
+     * Display rekap.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $filter = [
+            'akademik' => $request->get('akademik')
+        ];
+
+        
+        $mahasiswa = Mahasiswa::where('id_user', Auth::user()->id)->first();
+        $nilai = Nilai::where('id_mahasiswa', $mahasiswa->id)->with(['matakuliah', 'tahunAkademik']);
+        if ($filter['akademik'] != null || $filter['akademik'] != '') {
+            $nilai->where('id_tahun_akademik', $filter['akademik']);
+        }
+        // dd(Nilai::select('id_tahun_akademik')->where('id_mahasiswa', $mahasiswa->id)->groupBy('id_tahun_akademik')->with('tahunAkademik')->get()[0]->tahunAkademik->nama);
+
+        return view('mahasiswa.hasil.index', [
+            'nilai' => $nilai->get(),
+            'akademik' => Nilai::select('id_tahun_akademik')->where('id_mahasiswa', $mahasiswa->id)->groupBy('id_tahun_akademik')->with('tahunAkademik')->get()
+        ]);
     }
 }
