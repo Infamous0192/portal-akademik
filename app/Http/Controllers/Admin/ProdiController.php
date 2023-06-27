@@ -63,9 +63,7 @@ class ProdiController extends Controller
             return ['label' => $item->nama, 'value' => $item->id];
         });
 
-        $matakuliah = Matakuliah::where('id_prodi', $prodi->id)->get();
-
-        return view('admin.prodi.show', compact('prodi', 'fakultas', 'matakuliah'));
+        return view('admin.prodi.show', compact('prodi', 'fakultas'));
     }
 
     /**

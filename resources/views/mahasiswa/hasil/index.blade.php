@@ -49,6 +49,7 @@
                             <thead>
                                 <tr>
                                     <th>Matakuliah</th>
+                                    <th>Tahun Akademik</th>
                                     <th>Jumlah SKS</th>
                                     <th>Nilai Absen</th>
                                     <th>Nilai Tugas</th>
@@ -64,6 +65,7 @@
                                         <strong>{{ $data->matakuliah->kode }}</strong>
                                         <div>{{ $data->matakuliah->nama }}</div>
                                     </td>
+                                    <td style="text-transform: capitalize">{{ $data->tahunAkademik->semester }} {{ $data->tahunAkademik->nama }}</td>
                                     <td>{{ $data->matakuliah->sks }}</td>
                                     <td>{{ $data->nilai_absen }}</td>
                                     <td>{{ $data->nilai_tugas }}</td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FakultasRequest;
 use App\Models\Fakultas;
+use App\Models\Matakuliah;
 use Illuminate\Http\Request;
 
 class FakultasController extends Controller
@@ -52,7 +53,9 @@ class FakultasController extends Controller
      */
     public function show(Fakultas $fakultas)
     {
-        return view('admin.fakultas.show', compact('fakultas'));
+        $matakuliah = Matakuliah::where('id_fakultas', $fakultas->id)->get();
+
+        return view('admin.fakultas.show', compact('fakultas', 'matakuliah'));
     }
 
     /**

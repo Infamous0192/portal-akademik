@@ -60,7 +60,7 @@
             </div>
           </form>
 
-          <div class="card">
+          <div class="card mb-4">
             <div class="card-header d-flex align-items-center justify-content-between">
               <h4>Daftar Program Studi</h4>
               <a href="{{ route('admin.prodi.create', ['fakultas' => $fakultas->id]) }}">
@@ -97,6 +97,64 @@
                       <td>{{ $data->updated_at }}</td>
                       <td><a href="{{ route('admin.prodi.show', $data->id) }}" class="btn btn-sm btn-primary">Detail</a>
                       </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <h4>Jadwal Kuliah</h4>
+            </div>
+
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table" id="table-3">
+                  <thead>
+                    <tr>
+                      <th class="text-center">
+                        #
+                      </th>
+                      <th>Matakuliah</th>
+                      <th>Jumlah SKS</th>
+                      <th>Kategori</th>
+                      <th>Jadwal</th>
+                      <th>Ruangan</th>
+                      <th>Dosen Pengampu</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($matakuliah as $data)
+                    <tr>
+                      <td>
+                        {{ ($loop->index + 1) }}
+                      </td>
+                      <td class="py-2">
+                        <strong>{{ $data->kode }}</strong>
+                        <div>{{ $data->nama }}</div>
+                        <div>Semester {{ $data->semester }}</div>
+                      </td>
+                      <td>{{ $data->sks }}</td>
+                      <td>{{ $data->kategori == 'W' ? 'Wajib' : 'Peminatan' }}</td>
+                      <td>{{ $data->waktu_mulai }} - {{ $data->waktu_selesai }}</td>
+                      <td>{{ $data->ruangan->nama }}</td>
+                      <td>
+                        @if (count($data->dosen) > 0)
+                        <ul class="pl-0">
+                          @foreach ($data->dosen as $dosen)
+                          <li>{{ $dosen->nama }}</li>
+                          @endforeach
+                        </ul>
+                        @else
+                        <div>(Belum Ada Dosen Pengampu)</div>
+                        @endif
+                      </td>
+                      <td><a href="{{ route('admin.matakuliah.show', $data->id) }}"
+                          class="btn btn-sm btn-primary">Detail</a></td>
                     </tr>
                     @endforeach
                   </tbody>
@@ -146,6 +204,12 @@
   let deletedID = 0
 
   $("#table-1").dataTable({
+  "columnDefs": [
+    { "sortable": false, "targets": [6] }
+  ]
+});
+
+$("#table-2").dataTable({
   "columnDefs": [
     { "sortable": false, "targets": [6] }
   ]
