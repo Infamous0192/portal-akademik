@@ -44,6 +44,16 @@
             </div>
 
             <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-3">
+                  <select name="" id="gedung-filter" class="form-control">
+                    <option value="">Pilih Gedung</option>
+                    @foreach ($gedung as $data)
+                    <option value="{{ $data->nama }}">{{ $data->nama }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
               <div class="table-responsive">
                 <table class="table" id="table-1">
                   <thead>
@@ -94,10 +104,19 @@
 
 <!-- Page Specific JS File -->
 <script>
-  $("#table-1").dataTable({
-  "columnDefs": [
-    { "sortable": false, "targets": [5] }
-  ]
-});
+  const table1 = $("#table-1").DataTable({
+    "columnDefs": [
+      { "sortable": false, "targets": [6] }
+    ]
+  });
+
+  $('#gedung-filter').on('change', function() {
+    var filterValue = $(this).val();
+
+    table1
+      .columns(3)
+      .search(filterValue)
+      .draw();
+  });
 </script>
 @endpush

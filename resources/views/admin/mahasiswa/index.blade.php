@@ -44,6 +44,25 @@
             </div>
 
             <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-3">
+                  <select name="" id="fakultas-filter" class="form-control">
+                    <option value="">Pilih Fakultas</option>
+                    @foreach ($fakultas as $data)
+                    <option value="{{ $data->nama }}">{{ $data->nama }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select name="" id="prodi-filter" class="form-control">
+                    <option value="">Pilih Prodi</option>
+                    @foreach ($prodi as $data)
+                    <option value="{{ $data->nama }}">{{ $data->nama }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+
               <div class="table-responsive">
                 <table class="table" id="table-1">
                   <thead>
@@ -68,7 +87,8 @@
                       <td>{{ $data->nim }}</td>
                       <td>{{ $data->prodi->nama }}</td>
                       <td>{{ $data->fakultas->nama }}</td>
-                      <td><a href="{{ route('admin.mahasiswa.show', $data->id) }}" class="btn btn-sm btn-primary">Detail</a>
+                      <td><a href="{{ route('admin.mahasiswa.show', $data->id) }}"
+                          class="btn btn-sm btn-primary">Detail</a>
                       </td>
                     </tr>
                     @endforeach
@@ -92,10 +112,28 @@
 
 <!-- Page Specific JS File -->
 <script>
-  $("#table-1").dataTable({
-  "columnDefs": [
-    { "sortable": false, "targets": [5] }
-  ]
-});
+  const table1 = $("#table-1").DataTable({
+    "columnDefs": [
+      { "sortable": false, "targets": [5] }
+    ]
+  });
+
+  $('#fakultas-filter').on('change', function() {
+    var filterValue = $(this).val();
+
+    table1
+      .columns(4)
+      .search(filterValue)
+      .draw();
+  });
+
+  $('#prodi-filter').on('change', function() {
+    var filterValue = $(this).val();
+
+    table1
+      .columns(3)
+      .search(filterValue)
+      .draw();
+  });
 </script>
 @endpush

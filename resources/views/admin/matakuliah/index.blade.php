@@ -44,6 +44,37 @@
             </div>
 
             <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-3">
+                  <select name="" id="kategori-filter" class="form-control">
+                    <option value="">Pilih Kategori</option>
+                    <option value="Wajib">Wajib</option>
+                    <option value="Peminatan">Peminatan</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select name="" id="semester-filter" class="form-control">
+                    <option value="">Pilih Semester</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select name="" id="fakultas-filter" class="form-control">
+                    <option value="">Pilih Fakultas</option>
+                    @foreach ($fakultas as $data)
+                    <option value="{{ $data->nama }}">{{ $data->nama }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+
               <div class="table-responsive">
                 <table class="table" id="table-1">
                   <thead>
@@ -52,7 +83,8 @@
                         #
                       </th>
                       <th>Matakuliah</th>
-                      <th>Jumlah SKS</th>
+                      <th>Semester</th>
+                      <th>Jadwal</th>
                       <th>Kategori</th>
                       <th>Fakultas</th>
                       <th>Jumlah Mahasiswa</th>
@@ -69,9 +101,14 @@
                       <td class="py-2">
                         <strong>{{ $data->kode }}</strong>
                         <div>{{ $data->nama }}</div>
-                        <div>Semester {{ $data->semester }}</div>
                       </td>
-                      <td>{{ $data->sks }}</td>
+                      <td>{{ $data->semester }}</td>
+                      <td>
+                        <div>
+                          <strong>{{ $data->hari }}</strong>
+                        </div>
+                        <div>{{ $data->waktu_mulai }} - {{ $data->waktu_selesai }}</div>
+                      </td>
                       <td>{{ $data->kategori == 'W' ? 'Wajib' : 'Peminatan' }}</td>
                       <td>{{ $data->fakultas->nama }}</td>
                       <td>{{ $data->nilai_count }}</td>
@@ -110,10 +147,38 @@
 
 <!-- Page Specific JS File -->
 <script>
-  $("#table-1").dataTable({
-  "columnDefs": [
-    { "sortable": false, "targets": [7, 6] }
-  ]
-});
+  const table1 = $("#table-1").DataTable({
+    "columnDefs": [
+      { "sortable": false, "targets": [8] }
+    ]
+  });
+
+  $('#kategori-filter').on('change', function() {
+    var filterValue = $(this).val();
+
+    table1
+      .columns(4)
+      .search(filterValue)
+      .draw();
+  });
+
+  $('#semester-filter').on('change', function() {
+    var filterValue = $(this).val();
+
+    table1
+      .columns(2)
+      .search(filterValue)
+      .draw();
+  });
+
+  $('#fakultas-filter').on('change', function() {
+    var filterValue = $(this).val();
+
+    table1
+      .columns(5)
+      .search(filterValue)
+      .draw();
+  });
+</script>
 </script>
 @endpush

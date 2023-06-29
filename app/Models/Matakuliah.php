@@ -60,33 +60,36 @@ class Matakuliah extends Model
         return $this->hasMany(Nilai::class, 'id_matakuliah');
     }
 
-    public static function isScheduleAvailable($hari, $waktu_mulai, $waktu_selesai)
+    public static function isScheduleAvailable($hari, $waktu_mulai, $waktu_selesai, $semester, $id = null)
     {
         $query = DB::table('matakuliah')
             ->select(DB::raw('COUNT(*) as conflicts'))
             ->where('hari', '=', $hari)
+            ->whereIn('semester', $semester)
             ->where(function ($query) use ($waktu_mulai, $waktu_selesai) {
                 $query->where(function ($query) use ($waktu_mulai, $waktu_selesai) {
-                    $query->where('waktu_mulai', '<=', $waktu_mulai)
+                    $query->where('waktu_mulai', '<=', $waktu_selesai)
                         ->where('waktu_selesai', '>=', $waktu_mulai);
                 })->orWhere(function ($query) use ($waktu_mulai, $waktu_selesai) {
-                    $query->where('waktu_mulai', '<=', $waktu_selesai)
-                        ->where('waktu_selesai', '>=', $waktu_selesai);
-                })->orWhere(function ($query) use ($waktu_mulai, $waktu_selesai) {
                     $query->where('waktu_mulai', '>=', $waktu_mulai)
-                        ->where('waktu_selesai', '<=', $waktu_selesai);
+                        ->where('waktu_mulai', '<=', $waktu_selesai);
                 });
             });
+
+        if ($id != null) {
+            $query->where('id', '!=', $id);
+        }
 
         return $query->first()->conflicts == 0;
     }
 
-    public static function isRoomAvailable($hari, $ruangan, $waktu_mulai, $waktu_selesai, $id = null)
+    public static function isRoomAvailable($hari, $ruangan, $waktu_mulai, $waktu_selesai, $semester, $id = null)
     {
         $query = DB::table('matakuliah')
             ->select(DB::raw('COUNT(*) as room_usage'))
             ->where('id_ruangan', '=', $ruangan)
             ->where('hari', '=', $hari)
+            ->whereIn('semester', $semester)
             ->where(function ($query) use ($waktu_mulai, $waktu_selesai) {
                 $query->where(function ($query) use ($waktu_mulai, $waktu_selesai) {
                     $query->where('waktu_mulai', '<=', $waktu_selesai)

@@ -18,8 +18,9 @@ class RuanganController extends Controller
     public function index()
     {
         $ruangan = Ruangan::all();
+        $gedung = Gedung::all();
 
-        return view('admin.ruangan.index', compact('ruangan'));
+        return view('admin.ruangan.index', compact('ruangan', 'gedung'));
     }
 
     /**

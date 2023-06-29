@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DosenRequest;
 use App\Models\Prodi;
 use App\Models\Dosen;
+use App\Models\Fakultas;
 use App\Models\Matakuliah;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -22,8 +23,10 @@ class DosenController extends Controller
     public function index()
     {
         $dosen = Dosen::all();
+        $prodi = Prodi::all();
+        $fakultas = Fakultas::all();
 
-        return view('admin.dosen.index', compact('dosen'));
+        return view('admin.dosen.index', compact('dosen', 'fakultas', 'prodi'));
     }
 
     /**

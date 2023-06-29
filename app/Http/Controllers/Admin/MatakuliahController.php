@@ -32,7 +32,9 @@ class MatakuliahController extends Controller
             $query->where('id_tahun_akademik', $akademik->id ?? 0);
         }])->get();
 
-        return view('admin.matakuliah.index', compact('matakuliah'));
+        $fakultas = Fakultas::all();
+
+        return view('admin.matakuliah.index', compact('matakuliah', 'fakultas'));
     }
 
     /**
@@ -62,8 +64,13 @@ class MatakuliahController extends Controller
     {
         $waktu_mulai = Carbon::createFromFormat('h:i a', $request->get('waktu_mulai'))->format('H:i:s');
         $waktu_selesai = Carbon::createFromFormat('h:i a', $request->get('waktu_selesai'))->format('H:i:s');
+        $semester = $request->get('semester') % 2 ? [1, 3, 5, 7] : [2, 4, 8];
 
-        if (!Matakuliah::isRoomAvailable($request->get('hari'), $request->get('id_ruangan'), $waktu_mulai, $waktu_selesai)) {
+        if (!Matakuliah::isScheduleAvailable($request->get('hari'), $waktu_mulai, $waktu_selesai, $semester)) {
+            return redirect()->back()->withInput()->with('error', 'Jadwal bentrok');
+        }
+
+        if (!Matakuliah::isRoomAvailable($request->get('hari'), $request->get('id_ruangan'), $waktu_mulai, $waktu_selesai, $semester)) {
             return redirect()->back()->withInput()->with('error', 'Ruangan telah terpakai');
         }
 
@@ -149,8 +156,13 @@ class MatakuliahController extends Controller
         $matakuliah = Matakuliah::findOrFail($id);
         $waktu_mulai = Carbon::createFromFormat('h:i a', $request->get('waktu_mulai'))->format('H:i:s');
         $waktu_selesai = Carbon::createFromFormat('h:i a', $request->get('waktu_selesai'))->format('H:i:s');
+        $semester = $request->get('semester') % 2 ? [1, 3, 5, 7] : [2, 4, 8];
 
-        if (!Matakuliah::isRoomAvailable($request->get('hari'), $request->get('id_ruangan'), $waktu_mulai, $waktu_selesai, $matakuliah->id)) {
+        if (!Matakuliah::isScheduleAvailable($request->get('hari'), $waktu_mulai, $waktu_selesai, $semester, $matakuliah->id)) {
+            return redirect()->back()->withInput()->with('error', 'Jadwal bentrok');
+        }
+
+        if (!Matakuliah::isRoomAvailable($request->get('hari'), $request->get('id_ruangan'), $waktu_mulai, $waktu_selesai, $semester, $matakuliah->id)) {
             return redirect()->back()->withInput()->with('error', 'Ruangan telah terpakai');
         }
 

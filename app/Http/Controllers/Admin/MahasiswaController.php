@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MahasiswaRequest;
+use App\Models\Fakultas;
 use App\Models\Krs;
 use App\Models\Prodi;
 use App\Models\Mahasiswa;
@@ -23,8 +24,10 @@ class MahasiswaController extends Controller
     public function index()
     {
         $mahasiswa = Mahasiswa::all();
+        $prodi = Prodi::all();
+        $fakultas = Fakultas::all();
 
-        return view('admin.mahasiswa.index', compact('mahasiswa'));
+        return view('admin.mahasiswa.index', compact('mahasiswa', 'prodi', 'fakultas'));
     }
 
     /**

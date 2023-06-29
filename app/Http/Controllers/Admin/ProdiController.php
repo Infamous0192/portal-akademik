@@ -20,8 +20,9 @@ class ProdiController extends Controller
     public function index()
     {
         $prodi = Prodi::all();
+        $fakultas = Fakultas::all();
 
-        return view('admin.prodi.index', compact('prodi'));
+        return view('admin.prodi.index', compact('prodi', 'fakultas'));
     }
 
     /**
