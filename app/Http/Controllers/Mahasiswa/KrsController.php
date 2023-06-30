@@ -85,6 +85,7 @@ class KrsController extends Controller
                 $akademik = TahunAkademik::orderBy('id', 'desc')->first();
                 $query->where('id_tahun_akademik', $akademik->id ?? 0);
             }])
+            ->where('id_fakultas', $mahasiswa->id_fakultas)
             ->get();
 
         $nilai = Nilai::where('id_krs', $krs->id)->get();

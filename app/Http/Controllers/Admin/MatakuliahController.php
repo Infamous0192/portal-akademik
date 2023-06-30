@@ -66,9 +66,9 @@ class MatakuliahController extends Controller
         $waktu_selesai = Carbon::createFromFormat('h:i a', $request->get('waktu_selesai'))->format('H:i:s');
         $semester = $request->get('semester') % 2 ? [1, 3, 5, 7] : [2, 4, 8];
 
-        if (!Matakuliah::isScheduleAvailable($request->get('hari'), $waktu_mulai, $waktu_selesai, $semester)) {
-            return redirect()->back()->withInput()->with('error', 'Jadwal bentrok');
-        }
+        // if (!Matakuliah::isScheduleAvailable($request->get('hari'), $waktu_mulai, $waktu_selesai, $semester)) {
+        //     return redirect()->back()->withInput()->with('error', 'Jadwal bentrok');
+        // }
 
         if (!Matakuliah::isRoomAvailable($request->get('hari'), $request->get('id_ruangan'), $waktu_mulai, $waktu_selesai, $semester)) {
             return redirect()->back()->withInput()->with('error', 'Ruangan telah terpakai');
@@ -158,9 +158,9 @@ class MatakuliahController extends Controller
         $waktu_selesai = Carbon::createFromFormat('h:i a', $request->get('waktu_selesai'))->format('H:i:s');
         $semester = $request->get('semester') % 2 ? [1, 3, 5, 7] : [2, 4, 8];
 
-        if (!Matakuliah::isScheduleAvailable($request->get('hari'), $waktu_mulai, $waktu_selesai, $semester, $matakuliah->id)) {
-            return redirect()->back()->withInput()->with('error', 'Jadwal bentrok');
-        }
+        // if (!Matakuliah::isScheduleAvailable($request->get('hari'), $waktu_mulai, $waktu_selesai, $semester, $matakuliah->id)) {
+        //     return redirect()->back()->withInput()->with('error', 'Jadwal bentrok');
+        // }
 
         if (!Matakuliah::isRoomAvailable($request->get('hari'), $request->get('id_ruangan'), $waktu_mulai, $waktu_selesai, $semester, $matakuliah->id)) {
             return redirect()->back()->withInput()->with('error', 'Ruangan telah terpakai');
